@@ -1,30 +1,53 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class RecursiveProduct {
 
+    /**
+     * The main method that initializes the program.
+     * It handles input collection and invokes the recursive multiplication.
+     */
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int[] numbers = new int[5]; // Array to store the five numbers
+        try (Scanner scanner = new Scanner(System.in)) {
+            int[] numbers = new int[5];
 
-        // Prompt user to enter five numbers
-        for (int i = 0; i < numbers.length; i++) {
-            System.out.println("Enter number " + (i + 1) + ":");
-            numbers[i] = scanner.nextInt();
+            for (int i = 0; i < numbers.length; i++) {
+                numbers[i] = getIntFromUser(scanner, i);
+            }
+
+            int product = multiplyNumbers(numbers, 0);
+            System.out.println("The product of the entered numbers is: " + product);
         }
-
-        // Get the product of the numbers using recursion
-        int product = multiplyNumbers(numbers, 0);
-        System.out.println("The product of the entered numbers is: " + product);
-
-        scanner.close();
     }
 
-    // Recursive method to calculate product of the numbers
+    /**
+     * Recursive method to calculate product of numbers.
+     * @param numbers Array of numbers to multiply.
+     * @param index Current index in the array.
+     * @return Product of numbers from current index onward.
+     */
     private static int multiplyNumbers(int[] numbers, int index) {
         if (index == numbers.length) {
-            return 1; // Base case: if index reaches the length of the array, return 1
-        } else {
-            return numbers[index] * multiplyNumbers(numbers, index + 1); // Recursive case
+            return 1;
+        }
+        return numbers[index] * multiplyNumbers(numbers, index + 1);
+    }
+
+    /**
+     * Prompts the user to input an integer, handling invalid inputs gracefully.
+     * @param scanner Scanner object for user input.
+     * @param index Index of the current number to provide appropriate prompts.
+     * @return The validated integer input from the user.
+     */
+    private static int getIntFromUser(Scanner scanner, int index) {
+        while (true) {
+            try {
+                System.out.println("Enter number " + (index + 1) + ":");
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+                scanner.nextLine();
+            }
         }
     }
 }
